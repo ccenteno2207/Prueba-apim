@@ -26,8 +26,8 @@ jobs:
 
       - name: Create API for ms-bo-cliente
         env:
-          RESOURCE_GROUP: 'tu-grupo-de-recursos'
-          APIM_SERVICE_NAME: 'tu-nombre-de-apim'
+          RESOURCE_GROUP: 'RG-DEMO-DEV'
+          APIM_SERVICE_NAME: 'APIM-DEMO-CC-DEV'
           PRODUCT_CLIENTS: 'clientes'  # Nombre del producto para clientes
         run: |
           echo "Creando la API ms-bo-cliente..."
@@ -39,8 +39,8 @@ jobs:
 
       - name: Create API for ms-bo-user
         env:
-          RESOURCE_GROUP: 'tu-grupo-de-recursos'
-          APIM_SERVICE_NAME: 'tu-nombre-de-apim'
+          RESOURCE_GROUP: 'RG-DEMO-DEV'
+          APIM_SERVICE_NAME: 'APIM-DEMO-CC-DEV'
           PRODUCT_USERS: 'usuarios'  # Nombre del producto para usuarios
         run: |
           echo "Creando la API ms-bo-user..."
