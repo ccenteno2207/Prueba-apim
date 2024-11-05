@@ -1,0 +1,51 @@
+name: Deploy APIs to Azure APIM
+
+on:
+  push:
+    branches:
+      - main  # Cambia esta rama si es necesario
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+      - name: Set up Azure CLI
+        uses: azure/setup-cli@v1
+
+      - name: Login to Azure
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        run: |
+          az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+
+      - name: Create API for ms-bo-cliente
+        env:
+          RESOURCE_GROUP: 'tu-grupo-de-recursos'
+          APIM_SERVICE_NAME: 'tu-nombre-de-apim'
+          PRODUCT_CLIENTS: 'clientes'  # Nombre del producto para clientes
+        run: |
+          echo "Creando la API ms-bo-cliente..."
+          az apim api create --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --api-id 'ms-bo-cliente' --display-name 'MS BO Cliente' --path 'bo-cliente' --protocols 'https' --service-url 'https://url-del-servicio-bo-cliente' --skip-tls-validation
+          az apim api import --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --path 'bo-cliente' --specification-format 'swagger-link-json' --specification-url 'url-detu/api-definition.yaml'
+          az apim api update --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --api-id 'ms-bo-cliente' --set properties.policy='@PolicyFilePath'
+
+          az apim product api add --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --product-id $PRODUCT_CLIENTS --api-id 'ms-bo-cliente'
+
+      - name: Create API for ms-bo-user
+        env:
+          RESOURCE_GROUP: 'tu-grupo-de-recursos'
+          APIM_SERVICE_NAME: 'tu-nombre-de-apim'
+          PRODUCT_USERS: 'usuarios'  # Nombre del producto para usuarios
+        run: |
+          echo "Creando la API ms-bo-user..."
+          az apim api create --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --api-id 'ms-bo-user' --display-name 'MS BO User' --path 'bo-user' --protocols 'https' --service-url 'https://url-del-servicio-bo-user' --skip-tls-validation
+          az apim api import --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --path 'bo-user' --specification-format 'swagger-link-json' --specification-url 'url-de-tu/api-definition.yaml'
+          az apim api update --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --api-id 'ms-bo-user' --set properties.policy='@PolicyFilePath'
+        
+          az apim product api add --resource-group $RESOURCE_GROUP --service-name $APIM_SERVICE_NAME --product-id $PRODUCT_USERS --api-id 'ms-bo-user'

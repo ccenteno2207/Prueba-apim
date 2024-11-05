@@ -1,0 +1,23 @@
+swagger: "2.0"
+info:
+  title: "API Usuarios"
+  description: "API para la gestión de usuarios"
+  version: "1.0.0"
+host: "api.ejemplo.com"
+basePath: "/usuarios"
+paths:
+  /obtener:
+    get:
+      summary: "Obtener Usuarios"
+      responses:
+        '200':
+          description: "Lista de usuarios"
+  /crear:
+    post:
+      summary: "Crear Usuario"
+      responses:
+        '201':
+          description: "Usuario creado"
+          
+x-ms-apis:
+  product: "usuarios"  # Asociación al producto "usuarios"

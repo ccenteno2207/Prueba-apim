@@ -1,0 +1,23 @@
+swagger: "2.0"
+info:
+  title: "API Clientes"
+  description: "API para la gestión de clientes"
+  version: "1.0.0"
+host: "api.ejemplo.com"
+basePath: "/clientes"
+paths:
+  /obtener:
+    get:
+      summary: "Obtener Clientes"
+      responses:
+        '200':
+          description: "Lista de clientes"
+  /crear:
+    post:
+      summary: "Crear Cliente"
+      responses:
+        '201':
+          description: "Cliente creado"
+          
+x-ms-apis:
+  product: "clientes"  # Asociación al producto "clientes"
